@@ -47,7 +47,7 @@ start_sentinel() {
 }
 
 start_slave() {
-  echo "slaveof ${master} 6379" >> /etc/redis/redis.conf
+  echo "\nslaveof ${master} 6379" >> /etc/redis/redis.conf
   exec redis-server /etc/redis/redis.conf
 }
 
