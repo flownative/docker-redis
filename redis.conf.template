@@ -115,7 +115,7 @@ logfile ""
 # Set the number of databases. The default database is DB 0, you can select
 # a different one on a per-connection basis using SELECT <dbid> where
 # dbid is a number between 0 and 'databases'-1
-databases 50
+databases ${REDIS_DATABASES}
 
 ################################ SNAPSHOTTING  ################################
 #
@@ -388,7 +388,7 @@ slave-priority 100
 # 150k passwords per second against a good box. This means that you should
 # use a very strong password otherwise it will be very easy to break.
 #
-# requirepass foobared
+requirepass ${REDIS_PASSWORD}
 
 # Command renaming.
 #
@@ -445,7 +445,7 @@ maxclients 4000
 # limit for maxmemory so that there is some free RAM on the system for slave
 # output buffers (but this is not needed if the policy is 'noeviction').
 #
-maxmemory 157286400
+maxmemory ${REDIS_MAX_MEMORY}
 
 # MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
 # is reached. You can select among five behaviors:

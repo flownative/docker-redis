@@ -1,14 +1,19 @@
-FROM flownative/base:latest
+FROM eu.gcr.io/flownative-beach/base:0.9.22-6
 MAINTAINER Robert Lemke <robert@flownative.com>
+
+ENV REDIS_VERSION 4:4.0.1-4chl1~xenial1
 
 RUN add-apt-repository ppa:chris-lea/redis-server \
     && apt-get update \
-    && apt-get install -y redis-server \
+    && apt-get install -y redis-server=${REDIS_VERSION}  \
     && rm -rf /var/lib/apt/lists/*
 
 COPY redis-run.sh /redis-run.sh
 RUN chmod u=rwx /redis-run.sh
-COPY redis.conf /etc/redis/redis.conf
+COPY redis.conf.template /etc/redis/redis.conf.template
 COPY redis-sentinel.conf /etc/redis/redis-sentinel.conf
+COPY root-files /
 
-CMD /bin/bash -c "/redis-run.sh ${SENTINEL_HOST} ${SENTINEL_PORT}"
+EXPOSE 6379
+
+ENTRYPOINT ["/entrypoint.sh"]

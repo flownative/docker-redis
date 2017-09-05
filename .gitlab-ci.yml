@@ -1,0 +1,23 @@
+image: docker:git
+
+services:
+  - docker:dind
+
+stages:
+  - build
+
+before_script:
+  - docker login -u _json_key -p "$CI_CONTAINER_REGISTRY_TOKEN" https://eu.gcr.io
+
+variables:
+  DOCKER_HOST: 'tcp://localhost:2375'
+  DOCKER_DRIVER: 'overlay'
+
+build-tagged:
+  stage: build
+  only:
+    - tags
+  script:
+    - docker build -t eu.gcr.io/flownative-beach/redis:${CI_COMMIT_TAG} .
+    - docker push eu.gcr.io/flownative-beach/redis:${CI_COMMIT_TAG}
+    - docker rmi eu.gcr.io/flownative-beach/redis:${CI_COMMIT_TAG}
