@@ -1,7 +1,7 @@
-FROM eu.gcr.io/flownative-beach/base:0.9.22-6
+FROM eu.gcr.io/flownative-beach/base:0.10.1-1
 MAINTAINER Robert Lemke <robert@flownative.com>
 
-ENV REDIS_VERSION 4:4.0.1-4chl1~xenial1
+ENV REDIS_VERSION 5:4.0.10-1chl1~xenial1
 
 RUN add-apt-repository ppa:chris-lea/redis-server \
     && apt-get update \
