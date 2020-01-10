@@ -1,8 +1,13 @@
-FROM registry.gitlab.com/flownative/docker/base:1
+FROM flownative/base:1
 MAINTAINER Robert Lemke <robert@flownative.com>
 
-# See: https://launchpad.net/~chris-lea/+archive/ubuntu/redis-server?field.series_filter=bionic
-ENV REDIS_VERSION 5:5.0.7-1chl1~bionic1
+# -----------------------------------------------------------------------------
+# Redis
+# Latest versions: https://launchpad.net/~chris-lea/+archive/ubuntu/redis-server?field.series_filter=bionic
+
+ARG REDIS_VERSION
+ENV REDIS_VERSION ${REDIS_VERSION}
+
 
 RUN add-apt-repository ppa:chris-lea/redis-server \
     && apt-get update \
