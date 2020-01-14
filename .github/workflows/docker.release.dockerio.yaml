@@ -25,7 +25,7 @@ jobs:
 
           source_image_name: docker.pkg.github.com/flownative/docker-beach-redis/beach-redis
           source_registry_username: github
-          source_registry_password: ${{ secrets.GITHUB_TOKEN }}
+          source_registry_password: ${{ secrets.GITHUB_BOT_TOKEN }}
           source_registry_endpoint: https://docker.pkg.github.com/v2/
 
           target_image_name: flownative/beach-redis
