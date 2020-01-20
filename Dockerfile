@@ -1,6 +1,10 @@
 FROM docker.pkg.github.com/flownative/docker-base/base:1
 MAINTAINER Robert Lemke <robert@flownative.com>
 
+LABEL com.flownative.name="Beach Redis"
+LABEL com.flownative.description="Docker image providing Redis for Beach instances"
+LABEL com.flownative.vendor="Flownative GmbH"
+
 # -----------------------------------------------------------------------------
 # Redis
 # Latest versions: https://launchpad.net/~chris-lea/+archive/ubuntu/redis-server?field.series_filter=bionic
