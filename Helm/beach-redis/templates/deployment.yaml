@@ -44,7 +44,7 @@ spec:
 
       containers:
         - name: redis
-          image: "{{ .Values.image.repository }}:{{ tpl .Values.image.tag . }}"
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ tpl .Values.image.tag . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           env:
