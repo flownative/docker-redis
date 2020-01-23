@@ -1,7 +1,7 @@
 name: Release latest version to gcr.io
 on:
   schedule:
-    - cron: '30 0,12 * * *'
+    - cron: '30 0 * * *'
 
 jobs:
   build:

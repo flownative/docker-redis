@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "beach-redis.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "beach-redis.name" . }}
+    chart: {{ include "beach-redis.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  strategy:
+    type: 'RollingUpdate'
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  minReadySeconds: 5
+
+  selector:
+    matchLabels:
+      app: {{ include "beach-redis.name" . }}
+      release: {{ .Release.Name }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ include "beach-redis.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - emptyDir: {}
+          name: redis
+
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+      - name: {{ . }}
+      {{- end}}
+      {{- end}}
+
+      containers:
+        - name: redis
+          image: "{{ .Values.image.repository }}:{{ tpl .Values.image.tag . }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          env:
+            {{- if .Values.redis.credentialsSecret }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.redis.credentialsSecret }}"
+                  key: password
+            {{- else}}
+            - name: REDIS_PASSWORD
+              value: "{{ .Values.redis.password}}"
+            {{- end}}
+            - name: REDIS_MAX_MEMORY
+              value: "{{ .Values.redis.maxMemory }}"
+
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+
+          livenessProbe:
+            exec:
+              command:
+                - /healthcheck.sh
+                - --liveness
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            exec:
+              command:
+                - /healthcheck.sh
+                - --readiness
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+
+          resources:
+            requests:
+              cpu: "{{ .Values.resources.requests.cpu }}"
+              memory: "{{ .Values.resources.requests.memory }}"
+            limits:
+              cpu: "{{ .Values.resources.limits.cpu }}"
+              memory: "{{ .Values.resources.limits.memory }}"
+
+          volumeMounts:
+            - mountPath: /var/lib/redis
+              name: redis

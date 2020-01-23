@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build Docker image
-        uses: flownative/action-docker-build@master
+        uses: flownative/action-docker-build@v1
         with:
           tag_ref: ${{ github.ref }}
           git_repository_url: https://github.com/${{ github.repository }}
@@ -40,3 +40,14 @@ jobs:
           target_registry_username: github
           target_registry_password: ${{ secrets.GITHUB_TOKEN }}
           target_registry_endpoint: https://docker.pkg.github.com/v2/
+
+      - name: Release Helm chart
+        uses: flownative/action-helm-release@v1
+        with:
+          charts_folder: 'Helm'
+          chart_name: 'beach-redis'
+          chart_version: ${{ steps.latest_version.outputs.tag }}
+          app_version: ${{ steps.latest_version.outputs.tag }}
+          repository_url: 'https://charts.flownative.io'
+          repository_user: '${{ secrets.CHARTMUSEUM_USER }}'
+          repository_password: '${{ secrets.CHARTMUSEUM_PASSWORD }}'

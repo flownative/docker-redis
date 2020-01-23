@@ -1,0 +1,50 @@
+# Default values for beach-redis.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+##
+# Role Based Access Control
+#rbac:
+#
+#  # Specifies whether RBAC resources should be created
+#  create: true
+
+##
+# Deployment
+deployment:
+  revisionHistoryLimit: 1
+
+##
+# Resources
+resources:
+  requests:
+    cpu: "50m"
+    memory: "128Mi"
+  limits:
+    cpu: "1"
+    memory: "128Mi"
+
+##
+# Image
+image:
+
+  # Optional: An array of image pull secret names (see Kubernetes docs).
+  # The secrets must be manually created in the same namespace this chart will be installed in.
+  pullSecrets: []
+
+  # Image registry, repository and tag:
+  registry: docker.io
+  repository: flownative/beach-redis
+  tag: "{{ .Chart.AppVersion }}"
+
+  # The image pull policy:
+  pullPolicy: Always
+
+##
+# Redis configuration
+redis:
+  maxMemory: 50000000
+  password: "password"

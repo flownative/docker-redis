@@ -1,0 +1,14 @@
+apiVersion: v1
+name: beach-redis
+version: 0.0.1
+appVersion: 0.0.1
+description: Redis for Flownative Beach
+icon: https://pbs.twimg.com/profile_images/989449513558597632/oz0jpvm4_400x400.jpg
+keywords:
+  - flownative
+  - kubernetes
+  - redis
+home: https://www.flownative.com/beach
+maintainers:
+  - name: Flownative
+    email: team@flownative.com
