@@ -84,7 +84,8 @@ jobs:
     needs: release-github
     steps:
       - uses: actions/checkout@v2
-        ref: master
+        with:
+          ref: master
 
       - name: Release Helm chart
         uses: flownative/action-helm-release@v1
