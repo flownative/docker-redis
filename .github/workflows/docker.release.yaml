@@ -83,6 +83,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: release-github
     steps:
+      - uses: actions/checkout@v2
+        ref: master
+
       - name: Release Helm chart
         uses: flownative/action-helm-release@v1
         with:
