@@ -1,4 +1,4 @@
-FROM docker.pkg.github.com/flownative/docker-base/base:1
+FROM docker.pkg.github.com/flownative/docker-base/base:buster
 MAINTAINER Robert Lemke <robert@flownative.com>
 
 LABEL org.label-schema.name="Beach Redis"
@@ -7,23 +7,26 @@ LABEL org.label-schema.vendor="Flownative GmbH"
 
 # -----------------------------------------------------------------------------
 # Redis
-# Latest versions: https://launchpad.net/~chris-lea/+archive/ubuntu/redis-server?field.series_filter=bionic
+# Latest versions: https://packages.debian.org/buster/redis-server
 
 ARG REDIS_VERSION
 ENV REDIS_VERSION ${REDIS_VERSION}
+ENV FLOWNATIVE_LIB_PATH=/opt/flownative/lib \
+    REDIS_BASE_PATH=/opt/flownative/redis \
+    PATH="/opt/flownative/redis/bin:$PATH" \
+    LOG_DEBUG=false
 
+COPY --from=docker.pkg.github.com/flownative/bash-library/bash-library:1 /lib $FLOWNATIVE_LIB_PATH
 
-RUN add-apt-repository ppa:chris-lea/redis-server \
-    && apt-get update \
-    && apt-get install -y redis-server=${REDIS_VERSION}  \
-    && rm -rf /var/lib/apt/lists/*
+RUN install_packages \
+    ca-certificates \
+    redis-server=${REDIS_VERSION}
 
-COPY redis-run.sh /redis-run.sh
-RUN chmod u=rwx /redis-run.sh
-COPY redis.conf.template /etc/redis/redis.conf.template
-COPY redis-sentinel.conf /etc/redis/redis-sentinel.conf
 COPY root-files /
+RUN /build.sh
 
 EXPOSE 6379
 
-ENTRYPOINT ["/entrypoint.sh"]
+USER 1000
+ENTRYPOINT [ "/entrypoint.sh" ]
+CMD [ "/run.sh" ]

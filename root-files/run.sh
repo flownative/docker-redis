@@ -4,14 +4,10 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-# Load lib
+# Load library
 . "${FLOWNATIVE_LIB_PATH}/redis.sh"
 
+# Load Redis environment variables
 eval "$(redis_env)"
 
-if [[ "$*" = *"/run.sh"* ]]; then
-    redis_initialize
-fi
-
-echo ""
-exec "$@"
+exec redis-server "${REDIS_CONF_PATH}/redis.conf" --daemonize no

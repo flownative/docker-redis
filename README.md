@@ -9,10 +9,10 @@ of the tools as build arguments:
 
 ```bash
 docker build \
-    --build-arg REDIS_VERSION=5:5.0.7-1chl1~bionic1 \
+    --build-arg REDIS_VERSION=5:5.0.3-4+deb10u1 \
     -t flownative/beach-redis:latest .
 ```
 
 Check the latest stable release on the tool's respective websites:
  
-- Redis: https://launchpad.net/~chris-lea/+archive/ubuntu/redis-server?field.series_filter=bionic
+- Redis: https://packages.debian.org/buster/redis-server
