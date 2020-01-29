@@ -2,13 +2,13 @@ apiVersion: v1
 name: redis
 version: 0.0.1
 appVersion: 0.0.1
-description: Redis for Flownative Beach
+description: Redis chart by Flownative
 icon: https://pbs.twimg.com/profile_images/989449513558597632/oz0jpvm4_400x400.jpg
 keywords:
   - flownative
   - kubernetes
   - redis
-home: https://www.flownative.com/beach
+home: https://github.com/flownative/docker-redis
 maintainers:
   - name: Flownative
     email: team@flownative.com
