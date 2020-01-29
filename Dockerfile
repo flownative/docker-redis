@@ -11,6 +11,7 @@ LABEL org.label-schema.vendor="Flownative GmbH"
 
 ARG REDIS_VERSION
 ENV REDIS_VERSION ${REDIS_VERSION}
+
 ENV FLOWNATIVE_LIB_PATH=/opt/flownative/lib \
     REDIS_BASE_PATH=/opt/flownative/redis \
     PATH="/opt/flownative/redis/bin:$PATH" \

@@ -16,3 +16,11 @@ docker build \
 Check the latest stable release on the tool's respective websites:
  
 - Redis: https://packages.debian.org/buster/redis-server
+
+## Security
+
+Some draft notes about security:
+
+- the container can (and should) be started with `--security-opt=no-new-privileges`
+- in Kubernetes, the [security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) should be configured with `allowPrivilegeEscalation: false`
+- this repository contains a work-in-progress [seccomp](https://docs.docker.com/engine/security/seccomp/) profile which may work but is not ready for production yet
