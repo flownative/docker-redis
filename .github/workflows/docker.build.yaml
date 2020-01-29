@@ -19,7 +19,7 @@ jobs:
           tag_ref: ${{ github.ref }}
           git_repository_url: https://github.com/${{ github.repository }}
           git_sha: ${{ github.sha }}
-          image_name: flownative/docker-beach-redis/beach-redis
+          image_name: flownative/docker-redis/redis
           registry_password: ${{ secrets.GITHUB_BOT_TOKEN }}
 
       - name: Dispatch

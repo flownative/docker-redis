@@ -38,7 +38,7 @@ jobs:
           source_registry_password: ${{ secrets.GITHUB_BOT_TOKEN }}
           source_registry_endpoint: https://docker.pkg.github.com/v2/
 
-          target_image_name: eu.gcr.io/flownative-beach/beach-redis
+          target_image_name: eu.gcr.io/flownative-beach/redis
           target_registry_username: '_json_key'
           target_registry_password: ${{ secrets.GOOGLE_REGISTRY_PASSWORD }}
           target_registry_endpoint: https://eu.gcr.io/v2/
@@ -54,7 +54,7 @@ jobs:
           source_registry_password: ${{ secrets.GITHUB_BOT_TOKEN }}
           source_registry_endpoint: https://docker.pkg.github.com/v2/
 
-          target_image_name: eu.gcr.io/flownative-beach-a7c8b2/beach-redis
+          target_image_name: eu.gcr.io/flownative-beach-a7c8b2/redis
           target_registry_username: '_json_key'
           target_registry_password: ${{ secrets.GOOGLE_REGISTRY_PASSWORD_A7C8B2 }}
           target_registry_endpoint: https://eu.gcr.io/v2/
@@ -74,7 +74,7 @@ jobs:
           source_registry_password: ${{ secrets.GITHUB_BOT_TOKEN }}
           source_registry_endpoint: https://docker.pkg.github.com/v2/
 
-          target_image_name: flownative/beach-redis
+          target_image_name: flownative/redis
           target_registry_username: ${{ secrets.DOCKER_IO_REGISTRY_USER }}
           target_registry_password: ${{ secrets.DOCKER_IO_REGISTRY_PASSWORD }}
           target_registry_endpoint: https://index.docker.io/v1/
@@ -91,7 +91,7 @@ jobs:
         uses: flownative/action-helm-release@v1
         with:
           charts_folder: 'Helm'
-          chart_name: 'beach-redis'
+          chart_name: 'redis'
           chart_version: ${{ github.event.client_payload.image_tag }}
           app_version: ${{ github.event.client_payload.image_tag }}
           repository_url: 'https://charts.flownative.io'

@@ -1,6 +1,7 @@
-# Flownative Beach Redis Image
+# Flownative Redis Image
 
-A Docker image providing Redis for [Beach](https://www.flownative.com/beach) and [Local Beach](https://www.flownative.com/localbeach).
+A Docker image providing Redis for [Beach](https://www.flownative.com/beach),
+[Local Beach](https://www.flownative.com/localbeach) and other purposes.
 
 ## Building this image
 
@@ -10,7 +11,7 @@ of the tools as build arguments:
 ```bash
 docker build \
     --build-arg REDIS_VERSION=5:5.0.3-4+deb10u1 \
-    -t flownative/beach-redis:latest .
+    -t flownative/redis:latest .
 ```
 
 Check the latest stable release on the tool's respective websites:

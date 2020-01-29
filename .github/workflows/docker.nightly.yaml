@@ -21,7 +21,7 @@ jobs:
         uses: flownative/action-docker-build@v1
         with:
           tag_ref: ${{ steps.latest_version.outputs.tag }}
-          image_name: flownative/docker-beach-redis/beach-redis
+          image_name: flownative/docker-redis/redis
           git_repository_url: https://github.com/${{ github.repository }}
           git_sha: ${{ github.sha }}
           registry_password: ${{ secrets.GITHUB_BOT_TOKEN }}

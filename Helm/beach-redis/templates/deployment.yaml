@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "beach-redis.fullname" . }}
+  name: {{ include "redis.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ include "beach-redis.name" . }}
-    chart: {{ include "beach-redis.chart" . }}
+    app: {{ include "redis.name" . }}
+    chart: {{ include "redis.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 
@@ -22,13 +22,13 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ include "beach-redis.name" . }}
+      app: {{ include "redis.name" . }}
       release: {{ .Release.Name }}
 
   template:
     metadata:
       labels:
-        app: {{ include "beach-redis.name" . }}
+        app: {{ include "redis.name" . }}
         release: {{ .Release.Name }}
     spec:
       volumes:
