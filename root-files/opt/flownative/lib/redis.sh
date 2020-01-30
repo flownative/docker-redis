@@ -8,6 +8,7 @@
 # Load helper lib
 
 . "${FLOWNATIVE_LIB_PATH}/log.sh"
+. "${FLOWNATIVE_LIB_PATH}/files.sh"
 . "${FLOWNATIVE_LIB_PATH}/validation.sh"
 
 # ---------------------------------------------------------------------------------------
@@ -99,7 +100,7 @@ redis_initialize() {
     info "Initializing Redis ..."
 
     rm -f "${REDIS_BASE_PATH}/tmp/redis.pid"
-    mv "${REDIS_CONF_PATH}/redis-default.conf" "${REDIS_CONF_PATH}/redis.conf"
+    file_move_if_exists "${REDIS_CONF_PATH}/redis-default.conf" "${REDIS_CONF_PATH}/redis.conf"
 
     redis_conf_validate
 
