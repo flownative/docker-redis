@@ -17,6 +17,7 @@ ENV FLOWNATIVE_LIB_PATH=/opt/flownative/lib \
     PATH="/opt/flownative/redis/bin:$PATH" \
     LOG_DEBUG=false
 
+USER root
 COPY --from=docker.pkg.github.com/flownative/bash-library/bash-library:1 /lib $FLOWNATIVE_LIB_PATH
 
 RUN install_packages \
