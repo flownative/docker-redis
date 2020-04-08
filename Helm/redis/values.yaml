@@ -47,4 +47,6 @@ image:
 # Redis configuration
 redis:
   maxMemory: 50000000
+  maxMemoryPolicy: "allkeys-lru"
   password: "password"
+  credentialsSecret: ~

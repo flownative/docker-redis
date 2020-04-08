@@ -60,6 +60,8 @@ spec:
             {{- end}}
             - name: REDIS_MAX_MEMORY
               value: "{{ .Values.redis.maxMemory }}"
+            - name: REDIS_MAXMEMORY_POLICY
+              value: "{{ .Values.redis.maxMemoryPolicy }}"
 
           ports:
             - containerPort: 6379
