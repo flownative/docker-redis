@@ -28,7 +28,7 @@ export REDIS_DAEMON_USER="redis"
 export REDIS_DAEMON_GROUP="redis"
 export REDIS_DISABLE_COMMANDS="${REDIS_DISABLE_COMMANDS:-}"
 export REDIS_PASSWORD="${REDIS_PASSWORD:-}"
-export ALLOW_EMPTY_PASSWORD="${ALLOW_EMPTY_PASSWORD:-no}"
+export REDIS_ALLOW_EMPTY_PASSWORD="${REDIS_ALLOW_EMPTY_PASSWORD:-no}"
 EOF
     if [[ -f "${REDIS_PASSWORD_FILE:-}" ]]; then
         cat <<"EOF"
@@ -82,10 +82,10 @@ redis_conf_unset() {
 # @return void
 #
 redis_conf_validate() {
-    if is_boolean_yes "$ALLOW_EMPTY_PASSWORD"; then
-        warn "The environment variable ALLOW_EMPTY_PASSWORD=${ALLOW_EMPTY_PASSWORD} is enabled. Please do not use this flag in production."
+    if is_boolean_yes "$REDIS_ALLOW_EMPTY_PASSWORD"; then
+        warn "The environment variable REDIS_ALLOW_EMPTY_PASSWORD=${REDIS_ALLOW_EMPTY_PASSWORD} is enabled. Please do not use this flag in production."
     elif [ -z "${REDIS_PASSWORD}" ]; then
-        error "The REDIS_PASSWORD environment variable is empty or not set. Either set the variable ALLOW_EMPTY_PASSWORD=yes to allow Redis to be started without a password."
+        error "The REDIS_PASSWORD environment variable is empty or not set. Either set the variable REDIS_ALLOW_EMPTY_PASSWORD=yes to allow Redis to be started without a password."
         exit 1
     fi
 }
