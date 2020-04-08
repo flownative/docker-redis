@@ -31,4 +31,4 @@ EXPOSE 6379
 
 USER 1000
 ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "/run.sh" ]
+CMD [ "run" ]

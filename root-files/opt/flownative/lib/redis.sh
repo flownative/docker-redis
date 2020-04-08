@@ -105,6 +105,7 @@ redis_initialize() {
     redis_conf_validate
 
     redis_conf_set logfile ""
+    redis_conf_set loglevel "notice"
     redis_conf_set pidfile "${REDIS_BASE_PATH}/tmp/redis.pid"
     redis_conf_set daemonize yes
     redis_conf_set bind 0.0.0.0
