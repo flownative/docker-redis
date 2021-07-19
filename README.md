@@ -41,7 +41,7 @@ deploy Redis using this Docker image.
 | image.tag                       | string   | {{ .Chart.AppVersion }} | Tag of the Redis image                                     |
 | image.pullPolicy                | string   | Always                  | Pull policy for the Redis image                            |
 | redis.maxMemory                 | integer  | 50000000                | Maximum memory for Redis                                   |
-| redis.password                  | integer  | 50000000                | A clear text password for Redis authentication             |
+| redis.password                  | integer  |                         | A clear text password for Redis authentication             |
 | redis.credentialsSecret         | string   |                         | Name of a secret containing the password (key: "password") |
 
 ## Building this image
