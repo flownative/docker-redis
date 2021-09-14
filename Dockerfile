@@ -9,10 +9,8 @@ LABEL org.label-schema.vendor="Flownative GmbH"
 # Redis
 # Latest versions: https://packages.debian.org/buster/redis-server
 
-ARG REDIS_VERSION
-ENV REDIS_VERSION ${REDIS_VERSION}
-
 ENV FLOWNATIVE_LIB_PATH=/opt/flownative/lib \
+    REDIS_VERSION="5:5.0.3-4+deb10u3" \
     REDIS_BASE_PATH=/opt/flownative/redis \
     PATH="/opt/flownative/redis/bin:$PATH" \
     LOG_DEBUG=false
