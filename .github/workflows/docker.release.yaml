@@ -6,7 +6,6 @@ on:
 jobs:
   release-helm:
     runs-on: ubuntu-latest
-    needs: release-google
     steps:
       - uses: actions/checkout@v2
         with:
