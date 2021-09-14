@@ -58,6 +58,7 @@ jobs:
 
       - name: Dispatch
         uses: peter-evans/repository-dispatch@v1
+        with:
           token: ${{ secrets.FLOWNATIVE_BOT_TOKEN }}
           event-type: image-built
           client-payload: '{"image_name": "${{ steps.build_image.outputs.image_name }}", "image_tag": "${{ steps.latest_version.outputs.version }}"}'
