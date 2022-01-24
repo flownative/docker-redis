@@ -21,7 +21,8 @@ COPY --from=europe-docker.pkg.dev/flownative/docker/bash-library:1.13.3 /lib $FL
 
 RUN install_packages \
     ca-certificates \
-    redis-server=${REDIS_VERSION}
+    redis-server=${REDIS_VERSION} \
+    redis-tools=${REDIS_VERSION}
 
 COPY root-files /
 RUN /build.sh
