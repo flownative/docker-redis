@@ -48,7 +48,7 @@ deploy Redis using this Docker image.
 
 Check the latest stable release on the tool's respective websites:
 
-- Redis: https://packages.debian.org/buster/redis-server
+- Redis: https://packages.debian.org/bullseye/redis-server
 
 ## Security
 
