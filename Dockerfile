@@ -11,7 +11,7 @@ LABEL org.label-schema.vendor="Flownative GmbH"
 # Latest versions: https://packages.debian.org/bullseye/redis-server
 
 ENV FLOWNATIVE_LIB_PATH=/opt/flownative/lib \
-    REDIS_VERSION="5:6.0.15-1" \
+    REDIS_VERSION="5:6.0.16-1+deb11u2" \
     REDIS_BASE_PATH=/opt/flownative/redis \
     PATH="/opt/flownative/redis/bin:$PATH" \
     LOG_DEBUG=false
