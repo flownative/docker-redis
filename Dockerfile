@@ -1,5 +1,6 @@
 FROM europe-docker.pkg.dev/flownative/docker/base:buster
-MAINTAINER Robert Lemke <robert@flownative.com>
+
+LABEL org.opencontainers.image.authors="Robert Lemke <robert@flownative.com>"
 
 LABEL org.label-schema.name="Beach Redis"
 LABEL org.label-schema.description="Docker image providing Redis for Beach instances"
@@ -10,13 +11,13 @@ LABEL org.label-schema.vendor="Flownative GmbH"
 # Latest versions: https://packages.debian.org/buster/redis-server
 
 ENV FLOWNATIVE_LIB_PATH=/opt/flownative/lib \
-    REDIS_VERSION="5:5.0.3-4+deb10u3" \
+    REDIS_VERSION="5:5.0.14-1+deb10u2" \
     REDIS_BASE_PATH=/opt/flownative/redis \
     PATH="/opt/flownative/redis/bin:$PATH" \
     LOG_DEBUG=false
 
 USER root
-COPY --from=europe-docker.pkg.dev/flownative/docker/bash-library:1.13.3 /lib $FLOWNATIVE_LIB_PATH
+COPY --from=europe-docker.pkg.dev/flownative/docker/bash-library:1 /lib $FLOWNATIVE_LIB_PATH
 
 RUN install_packages \
     ca-certificates \
