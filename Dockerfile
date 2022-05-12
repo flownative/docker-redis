@@ -17,7 +17,7 @@ ENV FLOWNATIVE_LIB_PATH=/opt/flownative/lib \
     LOG_DEBUG=false
 
 USER root
-COPY --from=europe-docker.pkg.dev/flownative/docker/bash-library:1.13.3 /lib $FLOWNATIVE_LIB_PATH
+COPY --from=europe-docker.pkg.dev/flownative/docker/bash-library:1 /lib $FLOWNATIVE_LIB_PATH
 
 RUN install_packages \
     ca-certificates \
