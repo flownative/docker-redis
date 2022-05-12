@@ -1,5 +1,7 @@
 name: Build Docker Image
 on:
+  schedule:
+    - cron: '30 0 * * *'
   push:
     branches-ignore:
       - '**'
@@ -30,6 +32,26 @@ jobs:
           ref: ${{ steps.latest_version.outputs.tag }}
           fetch-depth: 100
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          flavor: |
+            latest=true
+          images: |
+            flownative/redis
+            europe-docker.pkg.dev/flownative/docker/redis
+          labels: |
+            org.opencontainers.image.title=Redis
+            org.opencontainers.image.description=Docker image providing Redis
+            org.opencontainers.image.licenses=MIT
+            org.opencontainers.image.vendor=Flownative GmbH
+            org.opencontainers.image.version=${{ steps.latest_version.outputs.version }}
+          tags: |
+            type=semver,pattern={{major}},value=${{ steps.latest_version.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.latest_version.outputs.version }}
+            type=semver,pattern={{version}},value=${{ steps.latest_version.outputs.version }}
+
       - name: Set up QEMU
         id: qemu
         uses: docker/setup-qemu-action@v1
@@ -58,15 +80,27 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            flownative/redis:${{ steps.latest_version.outputs.version }}
-            flownative/redis:latest
-            europe-docker.pkg.dev/flownative/docker/redis:${{ steps.latest_version.outputs.version }}
-            europe-docker.pkg.dev/flownative/docker/redis:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Dispatch
-        uses: peter-evans/repository-dispatch@v1
+  release-helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.FLOWNATIVE_BOT_TOKEN }}
-          event-type: image-built
-          client-payload: '{"image_name": "${{ steps.build_image.outputs.image_name }}", "image_tag": "${{ steps.latest_version.outputs.version }}"}'
+          ref: master
+
+      - name: Determine latest version
+        id: latest_version
+        uses: flownative/action-git-latest-release@master
+
+      - name: Release Helm chart
+        uses: flownative/action-helm-release@v1
+        with:
+          charts_folder: 'Helm'
+          chart_name: 'redis'
+          chart_version: ${{ steps.latest_version.outputs.tag }}
+          app_version: ${{ steps.latest_version.outputs.tag }}
+          repository_url: 'https://charts.flownative.io'
+          repository_user: '${{ secrets.CHARTMUSEUM_USER }}'
+          repository_password: '${{ secrets.CHARTMUSEUM_PASSWORD }}'
