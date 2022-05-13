@@ -46,7 +46,10 @@ image:
 ##
 # Redis configuration
 redis:
-  maxMemory: 50000000
+
+  # Must be a string, otherwise will be rendered in scientific notation, like "5e+07"
+  maxMemory: "50000000"
+
   maxMemoryPolicy: "allkeys-lru"
   password: "password"
   credentialsSecret: ~
