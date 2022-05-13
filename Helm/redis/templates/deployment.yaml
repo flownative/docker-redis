@@ -58,7 +58,7 @@ spec:
             - name: REDIS_PASSWORD
               value: "{{ .Values.redis.password}}"
             {{- end}}
-            - name: REDIS_MAX_MEMORY
+            - name: REDIS_MAXMEMORY
               value: "{{ .Values.redis.maxMemory }}"
             - name: REDIS_MAXMEMORY_POLICY
               value: "{{ .Values.redis.maxMemoryPolicy }}"
