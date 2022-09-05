@@ -8,16 +8,20 @@ LABEL org.label-schema.vendor="Flownative GmbH"
 
 # -----------------------------------------------------------------------------
 # Redis
-# Latest versions: https://packages.debian.org/bullseye/redis-server
+# Latest versions: https://packages.debian.org/bullseye-backports/redis-server
 
 ENV FLOWNATIVE_LIB_PATH=/opt/flownative/lib \
-    REDIS_VERSION="5:6.0.16-1+deb11u2" \
+    REDIS_VERSION="5:7.0.4-1~bpo11+1" \
     REDIS_BASE_PATH=/opt/flownative/redis \
     PATH="/opt/flownative/redis/bin:$PATH" \
     LOG_DEBUG=false
 
 USER root
 COPY --from=europe-docker.pkg.dev/flownative/docker/bash-library:1 /lib $FLOWNATIVE_LIB_PATH
+
+RUN echo "deb http://deb.debian.org/debian bullseye-backports main contrib non-free" >> /etc/apt/sources.list ; \
+     echo "deb-src http://deb.debian.org/debian bullseye-backports main contrib non-free" >> /etc/apt/sources.list ; \
+     apt update
 
 RUN install_packages \
     ca-certificates \
