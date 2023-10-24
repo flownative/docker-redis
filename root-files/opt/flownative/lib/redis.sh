@@ -114,6 +114,9 @@ redis_initialize() {
     redis_conf_set maxmemory "${REDIS_MAXMEMORY}"
     redis_conf_set maxmemory-policy "${REDIS_MAXMEMORY_POLICY}"
     redis_conf_set databases "${REDIS_DATABASES}"
+    redis_conf_set lazyfree-lazy-expire yes
+    redis_conf_set lazyfree-lazy-server-del yes
+    redis_conf_set lazyfree-lazy-user-del yes
     redis_conf_set hz "${REDIS_HZ}"
     redis_conf_unset save
     if [[ -n "${REDIS_PASSWORD}" ]]; then
