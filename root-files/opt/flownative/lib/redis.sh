@@ -29,6 +29,7 @@ export REDIS_DAEMON_GROUP="redis"
 export REDIS_DISABLE_COMMANDS="${REDIS_DISABLE_COMMANDS:-}"
 export REDIS_PASSWORD="${REDIS_PASSWORD:-}"
 export REDIS_ALLOW_EMPTY_PASSWORD="${REDIS_ALLOW_EMPTY_PASSWORD:-no}"
+export REDIS_HZ="${REDIS_HZ:-10}"
 EOF
     if [[ -f "${REDIS_PASSWORD_FILE:-}" ]]; then
         cat <<"EOF"
@@ -113,6 +114,7 @@ redis_initialize() {
     redis_conf_set maxmemory "${REDIS_MAXMEMORY}"
     redis_conf_set maxmemory-policy "${REDIS_MAXMEMORY_POLICY}"
     redis_conf_set databases "${REDIS_DATABASES}"
+    redis_conf_set hz "${REDIS_HZ}"
     redis_conf_unset save
     if [[ -n "${REDIS_PASSWORD}" ]]; then
         redis_conf_set requirepass "${REDIS_PASSWORD}"
