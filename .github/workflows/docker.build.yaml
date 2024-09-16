@@ -37,6 +37,7 @@ jobs:
             latest=true
           images: |
             flownative/redis
+            harbor.flownative.io/beach/redis
             europe-docker.pkg.dev/flownative/docker/redis
           labels: |
             org.opencontainers.image.title=Redis
