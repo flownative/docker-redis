@@ -1,4 +1,4 @@
-name: Build Docker Image
+name: Build
 on:
   schedule:
     - cron: '30 11 * * *'
@@ -14,12 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 'main'
+          ref: main
           fetch-depth: 100
 
       - name: Determine latest version
         id: latest_version
-        uses: flownative/action-git-latest-release@1
+        uses: flownative/action-git-latest-release@v1
 
       - run: |
           sudo chmod -R ugo+rwX . && shopt -s dotglob && rm -rf *
@@ -37,6 +37,7 @@ jobs:
             latest=true
           images: |
             flownative/redis
+            harbor.flownative.io/beach/redis
             europe-docker.pkg.dev/flownative/docker/redis
           labels: |
             org.opencontainers.image.title=Redis
@@ -53,8 +54,7 @@ jobs:
         id: qemu
         uses: docker/setup-qemu-action@v3
 
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
 
@@ -70,6 +70,13 @@ jobs:
           registry: europe-docker.pkg.dev/flownative/docker
           username: '_json_key'
           password: ${{ secrets.GOOGLE_ARTIFACTS_PASSWORD_DOCKER }}
+
+      - name: Login to Harbor
+        uses: docker/login-action@v3
+        with:
+          registry: harbor.flownative.io
+          username: ${{ secrets.HARBOR_BEACH_USERNAME }}
+          password: ${{ secrets.HARBOR_BEACH_PASSWORD }}
 
       - name: Build Docker image
         uses: docker/build-push-action@v6
@@ -91,22 +98,33 @@ jobs:
 
   release-helm:
     runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: write
+      packages: write
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: 'main'
+          fetch-depth: 100
 
       - name: Determine latest version
         id: latest_version
-        uses: flownative/action-git-latest-release@1
+        uses: flownative/action-git-latest-release@v1
 
-      - name: Release Helm chart
-        uses: flownative/action-helm-release@v2
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Release Helm chart (Harbor)
+        uses: flownative/action-helm-release@v2.0.1
         with:
           charts_folder: 'Helm'
           chart_name: 'redis'
           chart_version: ${{ steps.latest_version.outputs.tag }}
           app_version: ${{ steps.latest_version.outputs.tag }}
-          repository_url: 'https://charts.flownative.io'
-          repository_user: '${{ secrets.CHARTMUSEUM_USER }}'
-          repository_password: '${{ secrets.CHARTMUSEUM_PASSWORD }}'
+          registry_host: 'harbor.flownative.io'
+          repository_path: 'beach-charts'
+          repository_user: ${{ secrets.HARBOR_BEACH_CHARTS_USERNAME }}
+          repository_password: ${{ secrets.HARBOR_BEACH_CHARTS_PASSWORD }}
