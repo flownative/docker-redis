@@ -110,7 +110,7 @@ jobs:
 
       - name: Determine latest version
         id: latest_version
-        uses: flownative/action-git-latest-release@main
+        uses: flownative/action-git-latest-release@v1
 
       - name: Configure Git
         run: |
