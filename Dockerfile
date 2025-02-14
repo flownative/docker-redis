@@ -1,4 +1,4 @@
-FROM europe-docker.pkg.dev/flownative/docker/base:bullseye
+FROM europe-docker.pkg.dev/flownative/docker/base:bookworm
 
 LABEL org.opencontainers.image.authors="Robert Lemke <robert@flownative.com>"
 
@@ -8,10 +8,10 @@ LABEL org.label-schema.vendor="Flownative GmbH"
 
 # -----------------------------------------------------------------------------
 # Redis
-# Latest versions: https://packages.debian.org/bullseye/redis-server
+# Latest versions: https://packages.debian.org/bookworm/redis-server
 
 ENV FLOWNATIVE_LIB_PATH=/opt/flownative/lib \
-    REDIS_VERSION="5:6.0.16-1+deb11u2" \
+    REDIS_VERSION="5:7.0.15-1~deb12u1" \
     REDIS_BASE_PATH=/opt/flownative/redis \
     PATH="/opt/flownative/redis/bin:$PATH" \
     LOG_DEBUG=false
