@@ -9,9 +9,13 @@ on:
       - 'v*.*.*'
 
 jobs:
-  build:
-    # Downgrade due to segfault issus with qemu
-    runs-on: ubuntu-22.04
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.latest_version.outputs.version }}
+      tag: ${{ steps.latest_version.outputs.tag }}
+      tags: ${{ steps.meta.outputs.tags }}
+      labels: ${{ steps.meta.outputs.labels }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,14 +55,14 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.latest_version.outputs.version }}
             type=semver,pattern={{version}},value=${{ steps.latest_version.outputs.version }}
 
-      - name: Set up QEMU
-        id: qemu
-        uses: docker/setup-qemu-action@v3
+  build-intel:
+    needs: [prepare]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
         with:
-          # setup-qemu-action by default uses tonistiigi/binfmt:latest,
-          # which was out of date, see https://github.com/tonistiigi/binfmt/issues/165.
-          # Now it has been updated, but still causes segfaults.
-          image: tonistiigi/binfmt:qemu-v7.0.0
+          ref: ${{ needs.prepare.outputs.tag }}
+          fetch-depth: 100
 
       - name: Set up Docker Buildx
         id: buildx
@@ -88,23 +92,56 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ needs.prepare.outputs.tags }}
+          labels: ${{ needs.prepare.outputs.labels }}
 
-      - name: Send mail for Opsgenie heartbeat
-        uses: dawidd6/action-send-mail@v4
+  build-arm:
+    needs: [prepare]
+    runs-on: ubuntu-24.02-arm
+    steps:
+      - uses: actions/checkout@v4
         with:
-          connection_url: ${{secrets.OPSGENIE_HEARTBEAT_MAIL_CREDENTIALS}}
-          subject: Github Actions heartbeat ping
-          to: docker-build-redis@flownative.heartbeat.eu.opsgenie.net
-          from: Github Actions <noreply@flownative.com>
-          body: Build job of ${{github.repository}} completed successfully!
+          ref: ${{ needs.prepare.outputs.tag }}
+          fetch-depth: 100
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_IO_REGISTRY_USER }}
+          password: ${{ secrets.DOCKER_IO_REGISTRY_PASSWORD }}
+
+      - name: Login to Google Artifacts Registry
+        uses: docker/login-action@v3
+        with:
+          registry: europe-docker.pkg.dev/flownative/docker
+          username: '_json_key'
+          password: ${{ secrets.GOOGLE_ARTIFACTS_PASSWORD_DOCKER }}
+
+      - name: Login to Harbor
+        uses: docker/login-action@v3
+        with:
+          registry: harbor.flownative.io
+          username: ${{ secrets.HARBOR_BEACH_USERNAME }}
+          password: ${{ secrets.HARBOR_BEACH_PASSWORD }}
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/arm64
+          push: true
+          tags: ${{ needs.prepare.outputs.tags }}
+          labels: ${{ needs.prepare.outputs.labels }}
 
   release-helm:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build-intel, build-arm]
     permissions:
       contents: write
       packages: write
@@ -134,3 +171,12 @@ jobs:
           repository_path: 'beach-charts'
           repository_user: ${{ secrets.HARBOR_BEACH_CHARTS_USERNAME }}
           repository_password: ${{ secrets.HARBOR_BEACH_CHARTS_PASSWORD }}
+
+      - name: Send mail for Opsgenie heartbeat
+        uses: dawidd6/action-send-mail@v4
+        with:
+          connection_url: ${{secrets.OPSGENIE_HEARTBEAT_MAIL_CREDENTIALS}}
+          subject: Github Actions heartbeat ping
+          to: docker-build-redis@flownative.heartbeat.eu.opsgenie.net
+          from: Github Actions <noreply@flownative.com>
+          body: Build job of ${{github.repository}} completed successfully!
