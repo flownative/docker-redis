@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: 'v7'
           fetch-depth: 100
 
       - name: Determine latest version
@@ -111,7 +111,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 'main'
+          ref: 'v7'
           fetch-depth: 100
 
       - name: Determine latest version
