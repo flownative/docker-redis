@@ -113,6 +113,7 @@ redis_initialize() {
 
     redis_conf_set maxmemory "${REDIS_MAXMEMORY}"
     redis_conf_set maxmemory-policy "${REDIS_MAXMEMORY_POLICY}"
+    redis_conf_set activedefrag yes
     redis_conf_set databases "${REDIS_DATABASES}"
     redis_conf_set lazyfree-lazy-expire yes
     redis_conf_set lazyfree-lazy-server-del yes
