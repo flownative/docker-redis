@@ -13,7 +13,7 @@ jobs:
     # Downgrade due to segfault issus with qemu
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: 'v7'
           fetch-depth: 100
@@ -25,7 +25,7 @@ jobs:
       - run: |
           sudo chmod -R ugo+rwX . && shopt -s dotglob && rm -rf *
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ steps.latest_version.outputs.tag }}
           fetch-depth: 100
@@ -94,7 +94,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Send mail for Opsgenie heartbeat
-        uses: dawidd6/action-send-mail@v4
+        uses: dawidd6/action-send-mail@v6
         with:
           connection_url: ${{secrets.OPSGENIE_HEARTBEAT_MAIL_CREDENTIALS}}
           subject: Github Actions heartbeat ping
@@ -109,7 +109,7 @@ jobs:
       contents: write
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: 'v7'
           fetch-depth: 100
