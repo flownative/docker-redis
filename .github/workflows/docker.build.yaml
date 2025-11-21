@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       version: ${{ steps.latest_version.outputs.version }}
       tag: ${{ steps.latest_version.outputs.tag }}
@@ -140,7 +140,7 @@ jobs:
           labels: ${{ needs.prepare.outputs.labels }}
 
   release-helm:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [build-intel, build-arm]
     permissions:
       contents: write
