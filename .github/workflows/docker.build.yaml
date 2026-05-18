@@ -38,7 +38,7 @@ jobs:
             latest=true
           images: |
             flownative/redis
-            harbor.flownative.io/beach/redis
+            harbor.flownative.io/docker/redis
             europe-docker.pkg.dev/flownative/docker/redis
           labels: |
             org.opencontainers.image.title=Redis
@@ -81,8 +81,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: harbor.flownative.io
-          username: ${{ secrets.HARBOR_BEACH_USERNAME }}
-          password: ${{ secrets.HARBOR_BEACH_PASSWORD }}
+          username: ${{ secrets.HARBOR_DOCKER_USERNAME }}
+          password: ${{ secrets.HARBOR_DOCKER_PASSWORD }}
 
       - name: Build Docker image
         uses: docker/build-push-action@v6
