@@ -1,4 +1,4 @@
-FROM europe-docker.pkg.dev/flownative/docker/base:bullseye
+FROM harbor.flownative.io/docker/base:bullseye
 
 LABEL org.opencontainers.image.authors="Robert Lemke <robert@flownative.com>"
 
@@ -17,7 +17,7 @@ ENV FLOWNATIVE_LIB_PATH=/opt/flownative/lib \
     LOG_DEBUG=false
 
 USER root
-COPY --from=europe-docker.pkg.dev/flownative/docker/bash-library:1 /lib $FLOWNATIVE_LIB_PATH
+COPY --from=harbor.flownative.io/docker/bash-library:1 /lib $FLOWNATIVE_LIB_PATH
 
 RUN install_packages \
     ca-certificates \
