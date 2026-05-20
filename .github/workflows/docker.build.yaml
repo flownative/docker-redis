@@ -13,7 +13,7 @@ jobs:
     # Downgrade due to segfault issus with qemu
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: 'v7'
           fetch-depth: 100
@@ -25,14 +25,14 @@ jobs:
       - run: |
           sudo chmod -R ugo+rwX . && shopt -s dotglob && rm -rf *
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ steps.latest_version.outputs.tag }}
           fetch-depth: 100
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           flavor: |
             latest=true
@@ -52,7 +52,7 @@ jobs:
 
       - name: Set up QEMU
         id: qemu
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         with:
           # setup-qemu-action by default uses tonistiigi/binfmt:latest,
           # which was out of date, see https://github.com/tonistiigi/binfmt/issues/165.
@@ -61,23 +61,23 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_IO_REGISTRY_USER }}
           password: ${{ secrets.DOCKER_IO_REGISTRY_PASSWORD }}
 
       - name: Login to Harbor
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: harbor.flownative.io
           username: ${{ secrets.HARBOR_DOCKER_USERNAME }}
           password: ${{ secrets.HARBOR_DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           platforms: linux/amd64,linux/arm64
@@ -86,7 +86,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Send mail for Opsgenie heartbeat
-        uses: dawidd6/action-send-mail@v6
+        uses: dawidd6/action-send-mail@v17
         with:
           connection_url: ${{secrets.OPSGENIE_HEARTBEAT_MAIL_CREDENTIALS}}
           subject: Github Actions heartbeat ping
@@ -101,7 +101,7 @@ jobs:
       contents: write
       packages: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: 'v7'
           fetch-depth: 100
