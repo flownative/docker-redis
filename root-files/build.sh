@@ -20,7 +20,11 @@ mv /usr/bin/redis* "${REDIS_BASE_PATH}/bin/"
 chown -R root:root "${REDIS_BASE_PATH}"
 chmod -R g+rwX "${REDIS_BASE_PATH}"
 
-chown -R root:root /var/lib/redis
+# The data directory must be writable by the redis daemon (uid 1000), otherwise
+# RDB snapshotting fails with a MISCONF error as soon as persistence is enabled.
+# In Kubernetes this path is usually masked by a (world-writable) emptyDir volume,
+# but standalone (e.g. Local Beach) the image-internal directory is used.
+chown -R redis:redis /var/lib/redis
 chmod -R 755 /var/lib/redis
 
 chmod 664 "${REDIS_BASE_PATH}/etc/redis-default.conf"

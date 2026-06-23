@@ -30,6 +30,8 @@ export REDIS_DISABLE_COMMANDS="${REDIS_DISABLE_COMMANDS:-}"
 export REDIS_PASSWORD="${REDIS_PASSWORD:-}"
 export REDIS_ALLOW_EMPTY_PASSWORD="${REDIS_ALLOW_EMPTY_PASSWORD:-no}"
 export REDIS_HZ="${REDIS_HZ:-10}"
+export REDIS_SAVE="${REDIS_SAVE:-}"
+export REDIS_STOP_WRITES_ON_BGSAVE_ERROR="${REDIS_STOP_WRITES_ON_BGSAVE_ERROR:-no}"
 EOF
     if [[ -f "${REDIS_PASSWORD_FILE:-}" ]]; then
         cat <<"EOF"
@@ -118,7 +120,15 @@ redis_initialize() {
     redis_conf_set lazyfree-lazy-server-del yes
     redis_conf_set lazyfree-lazy-user-del yes
     redis_conf_set hz "${REDIS_HZ}"
-    redis_conf_unset save
+
+    # Persistence: this image is used as a pure cache, so RDB snapshotting is
+    # disabled by default (save ""). Important: merely removing the save directives
+    # is NOT enough — without any save directive Redis falls back to its compiled-in
+    # default save points (3600 1 / 300 100 / 60 10000) and keeps snapshotting. An
+    # explicit empty save is required to actually turn it off.
+    # Set REDIS_SAVE (e.g. "3600 1") to enable snapshotting again.
+    redis_conf_set save "${REDIS_SAVE}"
+    redis_conf_set stop-writes-on-bgsave-error "${REDIS_STOP_WRITES_ON_BGSAVE_ERROR}"
     if [[ -n "${REDIS_PASSWORD}" ]]; then
         redis_conf_set requirepass "${REDIS_PASSWORD}"
     else
