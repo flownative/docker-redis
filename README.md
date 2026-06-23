@@ -10,18 +10,36 @@ A Docker image providing Redis for [Beach](https://www.flownative.com/beach),
 
 ### Environment variables
 
-| Variable Name              | Type    | Default                   | Description                                    |
-|:---------------------------|:--------|:--------------------------|:-----------------------------------------------|
-| REDIS_BASE_PATH            | string  | /opt/flownative/redis     | Base path for Redis (read-only)                |
-| REDIS_CONF_PATH            | string  | /opt/flownative/redis/etc | Configuration path for Redis (read-only)       |
-| REDIS_DATABASES            | integer | 50                        | Maximum number of databases                    |
-| REDIS_MAXMEMORY            | string  | 150mb                     | Maximum memory                                 |
-| REDIS_MAXMEMORY_POLICY     | string  | allkeys-lru               | Policy for dealing with exhausted memory limit |
-| REDIS_DAEMON_USER          | string  | redis                     | Username for Redis daemon (read-only)          |
-| REDIS_DAEMON_GROUP         | string  | redis                     | Group for Redis daemon (read-only)             |
-| REDIS_DISABLE_COMMANDS     | string  |                           | A list of commands to disable                  |
-| REDIS_PASSWORD             | string  |                           | A clear text password for Redis authentication |
-| REDIS_ALLOW_EMPTY_PASSWORD | boolean | false                     | If Redis may start without a password set      |
+| Variable Name                     | Type    | Default                   | Description                                                          |
+|:----------------------------------|:--------|:--------------------------|:---------------------------------------------------------------------|
+| REDIS_BASE_PATH                   | string  | /opt/flownative/redis     | Base path for Redis (read-only)                                      |
+| REDIS_CONF_PATH                   | string  | /opt/flownative/redis/etc | Configuration path for Redis (read-only)                             |
+| REDIS_DATABASES                   | integer | 50                        | Maximum number of databases                                          |
+| REDIS_MAXMEMORY                   | string  | 150mb                     | Maximum memory                                                       |
+| REDIS_MAXMEMORY_POLICY            | string  | allkeys-lru               | Policy for dealing with exhausted memory limit                       |
+| REDIS_DAEMON_USER                 | string  | redis                     | Username for Redis daemon (read-only)                                |
+| REDIS_DAEMON_GROUP                | string  | redis                     | Group for Redis daemon (read-only)                                   |
+| REDIS_DISABLE_COMMANDS            | string  |                           | A list of commands to disable                                        |
+| REDIS_PASSWORD                    | string  |                           | A clear text password for Redis authentication                       |
+| REDIS_ALLOW_EMPTY_PASSWORD        | boolean | false                     | If Redis may start without a password set                            |
+| REDIS_SAVE                        | string  |                           | RDB snapshot save points (e.g. `3600 1`); empty disables persistence |
+| REDIS_STOP_WRITES_ON_BGSAVE_ERROR | boolean | no                        | If Redis should reject writes when an RDB snapshot fails             |
+
+### Persistence
+
+By default this image runs Redis as a pure cache: RDB snapshotting is **disabled**
+(`save ""`) and `stop-writes-on-bgsave-error` is set to `no`. No data is written to
+disk and there is nothing to persist across restarts.
+
+To enable RDB snapshots, set `REDIS_SAVE` to one or more save points, e.g.
+`REDIS_SAVE="3600 1"` (snapshot if at least 1 key changed within 3600 seconds). Make
+sure the data directory `/var/lib/redis` is writable by the daemon (uid 1000) — when
+running in Kubernetes, mount a writable volume (e.g. a `PersistentVolumeClaim`) there.
+
+To disable persistence again, leave `REDIS_SAVE` empty. Note that simply removing all
+`save` directives is not enough: without any `save` directive Redis falls back to its
+compiled-in default save points and keeps snapshotting. An explicit empty `save` is
+required, which is exactly what this image configures when `REDIS_SAVE` is empty.
 
 ## Helm Chart
 
