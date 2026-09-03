@@ -21,9 +21,11 @@ A Docker image providing Redis for [Beach](https://www.flownative.com/beach),
 | REDIS_DAEMON_GROUP                | string  | redis                     | Group for Redis daemon (read-only)                                   |
 | REDIS_DISABLE_COMMANDS            | string  |                           | A list of commands to disable                                        |
 | REDIS_PASSWORD                    | string  |                           | A clear text password for Redis authentication                       |
+| REDIS_PASSWORD_FILE               | string  |                           | Path of a file containing the Redis password                         |
 | REDIS_ALLOW_EMPTY_PASSWORD        | boolean | false                     | If Redis may start without a password set                            |
 | REDIS_SAVE                        | string  |                           | RDB snapshot save points (e.g. `3600 1`); empty disables persistence |
 | REDIS_STOP_WRITES_ON_BGSAVE_ERROR | boolean | no                        | If Redis should reject writes when an RDB snapshot fails             |
+| REDIS_HZ                          | integer | 10                        | Frequency of Redis background tasks per second                       |
 
 ### Persistence
 
@@ -66,7 +68,7 @@ deploy Redis using this Docker image.
 
 Check the latest stable release on the tool's respective websites:
 
-- Redis: https://packages.debian.org/bookworm/redis-server
+- Redis: https://packages.debian.org/trixie/redis-server
 
 ## Security
 

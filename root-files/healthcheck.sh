@@ -1,25 +1,17 @@
 #!/bin/bash
 
-READINESS=0
-LIVENESS=0
+# Liveness and readiness probe: succeeds when Redis answers a PING. The
+# password reaches redis-cli through the environment, so it never shows up
+# in the process list. Both probe types (--liveness, --readiness) run the
+# same check.
 
-if [ ! -z $1 ]; then
-    [ $1 == "--readiness" ] && READINESS=1
-    [ $1 == "--liveness" ] && LIVENESS=1
+set -o nounset
+
+if [[ -z "${REDIS_PASSWORD:-}" && -f "${REDIS_PASSWORD_FILE:-}" ]]; then
+    REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+fi
+if [[ -n "${REDIS_PASSWORD:-}" ]]; then
+    export REDISCLI_AUTH="${REDIS_PASSWORD}"
 fi
 
-return_ok()
-{
-    exit 0
-}
-return_fail()
-{
-    exit 1
-}
-
-status=0
-if [ `redis-cli -a ${REDIS_PASSWORD} PING | grep PONG` ]; then
-    return_ok
-fi
-
-return_fail
+redis-cli PING 2>/dev/null | grep -q PONG
